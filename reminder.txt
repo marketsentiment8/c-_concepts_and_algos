@@ -1,0 +1,23 @@
+Fix spacing on 1.5 
+inputs the character “X,” then the output should look as follows:
+ X X X
+ X X
+ X
+ X
+ X
+ X
+ X
+ X X
+ X X X DONE
+
+
+ 2.5 INCLUDE DIFFERENCE FROM MAX-People OVER
+
+
+
+
+Project 5 rounding error for :  int servingsPerDay = static_cast<int>(totalCaloriesRequired / totalCaloriesConsumed); @
+Project 6: chang value of coin to type of coin @
+Project 7: 
+            Error when doing 12 10am and 2 10 am
+
