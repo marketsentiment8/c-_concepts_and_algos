@@ -1,52 +1,44 @@
 #include <iostream>
-#include <algorithm>
 #include <string>
+#include <algorithm>
+using namespace std;
 
-void sortArrays(char letters[], int occurrences[], int size) {
-    for (int i = 0; i < size - 1; ++i) {
-        for (int j = i + 1; j < size; ++j) {
-            if (occurrences[i] < occurrences[j]) {
-                std::swap(occurrences[i], occurrences[j]);
-                std::swap(letters[i], letters[j]);
+void sort(int counts[], char letters[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = i + 1; j < size; j++) {
+            if (counts[j] > counts[i]) {
+                swap(counts[i], counts[j]);
+                swap(letters[i], letters[j]);
             }
         }
-    }
-}
-
-void printOccurrences(char letters[], int occurrences[], int size) {
-    std::cout << "Letter Number of Occurrences\n";
-    for (int i = 0; i < size; ++i) {
-        std::cout << letters[i] << " " << occurrences[i] << "\n";
     }
 }
 
 int main() {
-    const int MAX_SIZE = 26; // assuming lowercase letters only
-    char letters[MAX_SIZE] = {};
-    int occurrences[MAX_SIZE] = {0};
-    int size = 0;
+    string input;
+    cout << "Enter a line of text ending with a period: ";
+    getline(cin, input);
 
-    std::string input;
-    std::cout << "Enter a line of text: ";
-    std::getline(std::cin, input);
+    int counts[26] = {0};
+    char letters[26];
+    for (int i = 0; i < 26; i++) {
+        letters[i] = 'a' + i;
+    }
 
-    // Count occurrences of each letter
     for (char c : input) {
-        if (std::islower(c)) {
-            int index = c - 'a';
-            if (occurrences[index] == 0) {
-                letters[size] = c;
-                ++size;
-            }
-            ++occurrences[index];
+        if (c >= 'a' && c <= 'z') {
+            counts[c - 'a']++;
         }
     }
 
-    // Sort arrays
-    sortArrays(letters, occurrences, size);
+    sort(counts, letters, 26);
 
-    // Print occurrences
-    printOccurrences(letters, occurrences, size);
+    cout << "Letter Number of Occurrences" << endl;
+    for (int i = 0; i < 26; i++) {
+        if (counts[i] > 0) {
+            cout << letters[i] << " " << counts[i] << endl;
+        }
+    }
 
     return 0;
 }

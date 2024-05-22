@@ -1,30 +1,37 @@
 #include <iostream>
 #include <string>
-
-void extractInfo(const std::string& input, std::string& name, int& age, std::string& title) {
-    size_t pos = input.find(' ');
-    name = input.substr(0, pos);
-    
-    size_t nextPos = input.find(' ', pos + 1);
-    age = std::stoi(input.substr(pos + 1, nextPos - pos - 1));
-    
-    title = input.substr(nextPos + 1);
-}
+#include <map>
+#include <cctype>
+#include <sstream>
+using namespace std;
 
 int main() {
-    std::string input;
-    
-    std::cout << "Enter name, age, and title separated by space: ";
-    std::getline(std::cin, input);
+    string line;
+    cout << "Enter a line of text: ";
+    getline(cin, line);
 
-    std::string name, title;
-    int age;
+    map<char, int> letterCount;
+    int wordCount = 0;
 
-    extractInfo(input, name, age, title);
+    // Convert to lowercase and count letters
+    for (char &c : line) {
+        if (isalpha(c)) {
+            c = tolower(c);
+            letterCount[c]++;
+        }
+    }
 
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Age: " << age << std::endl;
-    std::cout << "Title: " << title << std::endl;
+    // Count words
+    stringstream ss(line);
+    string word;
+    while (ss >> word) {
+        wordCount++;
+    }
+
+    cout << wordCount << " words" << endl;
+    for (const auto &entry : letterCount) {
+        cout << entry.first << " " << entry.second << endl;
+    }
 
     return 0;
 }

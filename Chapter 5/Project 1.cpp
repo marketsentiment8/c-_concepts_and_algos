@@ -1,66 +1,49 @@
 #include <iostream>
+#include <iomanip>
 
-// Function prototypes
-void getInput(int& hours, int& minutes);
-void convertTo12Hour(int& hours, char& period);
-void displayOutput(int hours, int minutes, char period);
+void getInput(int& hours, int& minutes) {
+    std::cout << "Enter hours (0-23): ";
+    std::cin >> hours;
+    std::cout << "Enter minutes (0-59): ";
+    std::cin >> minutes;
+}
+
+void convertTo12Hour(int hours, int minutes, int& convHours, char& period) {
+    if (hours == 0) {
+        convHours = 12;
+        period = 'A';
+    } else if (hours == 12) {
+        convHours = 12;
+        period = 'P';
+    } else if (hours < 12) {
+        convHours = hours;
+        period = 'A';
+    } else {
+        convHours = hours - 12;
+        period = 'P';
+    }
+}
+
+void display12HourTime(int hours, int minutes, char period) {
+    std::cout << "The time in 12-hour notation is: " 
+              << std::setw(2) << std::setfill('0') << hours << ":" 
+              << std::setw(2) << std::setfill('0') << minutes << " " 
+              << period << "M" << std::endl;
+}
 
 int main() {
-    char choice;
+    int hours, minutes, convHours;
+    char period;
+    char again;
 
     do {
-        int hours, minutes;
-        char period;
-
-        // Get user input
         getInput(hours, minutes);
+        convertTo12Hour(hours, minutes, convHours, period);
+        display12HourTime(convHours, minutes, period);
 
-        // Convert to 12-hour notation
-        convertTo12Hour(hours, period);
-
-        // Display the output
-        displayOutput(hours, minutes, period);
-
-        // Ask the user if they want to continue
-        std::cout << "Do you want to convert another time? (Y/N): ";
-        std::cin >> choice;
-
-    } while (choice == 'Y' || choice == 'y');
-
-    std::cout << "Program ended" << std::endl;
+        std::cout << "Do you want to convert another time? (y/n): ";
+        std::cin >> again;
+    } while (again == 'y' || again == 'Y');
 
     return 0;
-}
-
-// Function to get input from the user
-void getInput(int& hours, int& minutes) {
-    std::cout << "Enter the time in 24-hour notation (HH MM): ";
-    std::cin >> hours >> minutes;
-}
-
-// Function to convert 24-hour notation to 12-hour notation
-void convertTo12Hour(int& hours, char& period) {
-    if (hours >= 0 && hours <= 11) {
-        period = 'A';
-        if (hours == 0) {
-            hours = 12;
-        }
-    } else {
-        period = 'P';
-        if (hours > 12) {
-            hours -= 12;
-        }
-    }
-}
-
-// Function to display the converted time
-void displayOutput(int hours, int minutes, char period) {
-    std::cout << "Converted time: " << hours << ":";
-
-    // Ensure minutes are displayed with a leading zero if necessary
-    if (minutes < 10) {
-        std::cout << "0";
-    }
-
-    std::cout << minutes << " " << ((period == 'A') ? "AM" : "PM") << std::endl;
 }

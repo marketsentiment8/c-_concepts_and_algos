@@ -35,7 +35,7 @@ int main() {
 
     } while (repeat == 'y' || repeat == 'Y');
 
-    std::cout << "Program ended. Goodbye!\n";
+    std::cout << "see ya\n";
 
     return 0;
 }

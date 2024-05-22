@@ -1,65 +1,63 @@
 #include <iostream>
-#include <vector>
+using namespace std;
 
-// Function to print the tic-tac-toe board
-void printBoard(const std::vector<char>& board) {
-    for (int i = 0; i < 9; ++i) {
-        std::cout << board[i] << " ";
-        if ((i + 1) % 3 == 0)
-            std::cout << std::endl;
+void printBoard(char board[]) {
+    for (int i = 0; i < 9; i++) {
+        cout << board[i] << " ";
+        if (i % 3 == 2) cout << endl;
     }
 }
 
-// Function to check if a player has won
-bool checkWin(const std::vector<char>& board, char player) {
-    // Check rows, columns, and diagonals
-    return ((board[0] == player && board[1] == player && board[2] == player) ||
-            (board[3] == player && board[4] == player && board[5] == player) ||
-            (board[6] == player && board[7] == player && board[8] == player) ||
-            (board[0] == player && board[3] == player && board[6] == player) ||
-            (board[1] == player && board[4] == player && board[7] == player) ||
-            (board[2] == player && board[5] == player && board[8] == player) ||
-            (board[0] == player && board[4] == player && board[8] == player) ||
-            (board[2] == player && board[4] == player && board[6] == player));
+bool checkWin(char board[], char player) {
+    for (int i = 0; i < 3; i++) {
+        if (board[i*3] == player && board[i*3+1] == player && board[i*3+2] == player)
+            return true;
+        if (board[i] == player && board[i+3] == player && board[i+6] == player)
+            return true;
+    }
+    if (board[0] == player && board[4] == player && board[8] == player)
+        return true;
+    if (board[2] == player && board[4] == player && board[6] == player)
+        return true;
+    return false;
+}
+
+bool checkDraw(char board[]) {
+    for (int i = 0; i < 9; i++) {
+        if (board[i] != 'X' && board[i] != 'O')
+            return false;
+    }
+    return true;
 }
 
 int main() {
-    std::vector<char> board(9, ' '); // Initialize an empty board
-    char currentPlayer = 'X'; // Player X starts
-    int position;
-
-    std::cout << "Let's play Tic-Tac-Toe!\n";
-    std::cout << "Player X starts. Enter position (1-9):" << std::endl;
+    char board[9] = {'1','2','3','4','5','6','7','8','9'};
+    char player = 'X';
+    int move;
 
     while (true) {
         printBoard(board);
-        std::cin >> position;
-
-        if (position < 1 || position > 9 || board[position - 1] != ' ') {
-            std::cout << "Invalid move. Please try again." << std::endl;
+        cout << "Player " << player << ", enter your move: ";
+        cin >> move;
+        if (move < 1 || move > 9 || board[move-1] == 'X' || board[move-1] == 'O') {
+            cout << "Invalid move, try again." << endl;
             continue;
         }
 
-        board[position - 1] = currentPlayer;
-
-        if (checkWin(board, currentPlayer)) {
+        board[move-1] = player;
+        if (checkWin(board, player)) {
             printBoard(board);
-            std::cout << "Player " << currentPlayer << " wins!" << std::endl;
+            cout << "Player " << player << " wins!" << endl;
             break;
         }
 
-        if (currentPlayer == 'X')
-            currentPlayer = 'O';
-        else
-            currentPlayer = 'X';
-
-        if (std::count(board.begin(), board.end(), ' ') == 0) {
+        if (checkDraw(board)) {
             printBoard(board);
-            std::cout << "It's a draw!" << std::endl;
+            cout << "The game is a draw!" << endl;
             break;
         }
 
-        std::cout << "Player " << currentPlayer << "'s turn. Enter position (1-9):" << std::endl;
+        player = (player == 'X') ? 'O' : 'X';
     }
 
     return 0;

@@ -1,45 +1,57 @@
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 #include <iomanip>
+#include <stdexcept>
 
-// Function to convert time to military time
-std::string convertToMilitaryTime(const std::string& timeStr) {
-    std::stringstream ss(timeStr);
-    std::string hourStr, minuteStr, ampm;
-    char colon, space;
+using namespace std;
 
-    ss >> hourStr >> colon >> minuteStr >> ampm;
+string convertToMilitaryTime(const string &timeStr) {
+    stringstream ss(timeStr);
+    int hour, minute;
+    char colon;
+    string period;
 
-    int hour = std::stoi(hourStr);
-    int minute = std::stoi(minuteStr);
+    // Read and parse the time string
+    ss >> hour >> colon >> minute >> period;
 
-    // Adjust hour for PM time
-    if (ampm == "PM" && hour < 12) {
-        hour += 12;
+    // Check for any parsing errors
+    if (ss.fail() || colon != ':' || (period != "AM" && period != "PM")) {
+        throw invalid_argument("Invalid time format.");
     }
 
-    // Adjust hour for AM time at 12 AM
-    if (ampm == "AM" && hour == 12) {
+    // Validate the hour and minute ranges
+    if (hour < 1 || hour > 12 || minute < 0 || minute > 59) {
+        throw out_of_range("Invalid time value.");
+    }
+
+    // Convert to 24-hour format
+    if (period == "PM" && hour != 12) {
+        hour += 12;
+    } else if (period == "AM" && hour == 12) {
         hour = 0;
     }
 
-    // Convert hour and minute to 4-digit military time
-    std::ostringstream militaryTime;
-    militaryTime << std::setw(2) << std::setfill('0') << hour << std::setw(2) << minute << " hours";
+    // Format the output as HHMM
+    stringstream result;
+    result << setw(2) << setfill('0') << hour << setw(2) << setfill('0') << minute << " hours";
 
-    return militaryTime.str();
+    return result.str();
 }
 
 int main() {
-    std::string inputTime;
+    string timeStr;
+    cout << "Enter the time (HH:MM AM/PM): ";
+    getline(cin, timeStr);
 
-    std::cout << "Enter the time (HH:MM AM/PM): ";
-    std::getline(std::cin, inputTime);
-
-    std::string militaryTime = convertToMilitaryTime(inputTime);
-
-    std::cout << "Military time: " << militaryTime << std::endl;
+    try {
+        string militaryTime = convertToMilitaryTime(timeStr);
+        cout << "Military Time: " << militaryTime << endl;
+    } catch (const invalid_argument &e) {
+        cerr << e.what() << endl;
+    } catch (const out_of_range &e) {
+        cerr << e.what() << endl;
+    }
 
     return 0;
 }

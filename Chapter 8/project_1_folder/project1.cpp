@@ -1,38 +1,46 @@
 #include <iostream>
-#include <cstring>
+#include <string>
+#include <cctype>
+using namespace std;
 
-void extractInfo(const char* input, char* name, int& age, char* title) {
-    char* inputCopy = new char[strlen(input) + 1];
-    std::strcpy(inputCopy, input);
+string correctSentence(const string &sentence) {
+    string result;
+    bool newWord = true;
+    bool inWhitespace = false;
 
-    char* token = std::strtok(inputCopy, " ");
-    std::strcpy(name, token);
-
-    token = std::strtok(nullptr, " ");
-    age = std::atoi(token);
-
-    token = std::strtok(nullptr, " ");
-    std::strcpy(title, token);
-
-    delete[] inputCopy;
+    for (char c : sentence) {
+        if (isspace(c)) {
+            if (!inWhitespace) {
+                result += ' ';
+                inWhitespace = true;
+            }
+        } else {
+            if (newWord) {
+                result += toupper(c);
+                newWord = false;
+            } else {
+                result += tolower(c);
+            }
+            inWhitespace = false;
+        }
+    }
+    if (result.back() == ' ') {
+        result.pop_back();
+    }
+    return result;
 }
 
 int main() {
-    const int MAX_LENGTH = 100;
-    char input[MAX_LENGTH];
+    string sentence;
+    cout << "Enter a sentence (up to 100 characters) ending with a period: ";
+    getline(cin, sentence);
 
-    std::cout << "Enter name, age, and title separated by space: ";
-    std::cin.getline(input, MAX_LENGTH);
+    if (sentence.back() != '.') {
+        sentence += '.';
+    }
 
-    char name[MAX_LENGTH];
-    int age;
-    char title[MAX_LENGTH];
-
-    extractInfo(input, name, age, title);
-
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Age: " << age << std::endl;
-    std::cout << "Title: " << title << std::endl;
+    string correctedSentence = correctSentence(sentence);
+    cout << correctedSentence << endl;
 
     return 0;
 }
